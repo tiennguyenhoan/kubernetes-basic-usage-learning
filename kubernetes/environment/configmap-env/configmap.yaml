@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: dummy-config
 data:
-  VERSION: 4
+  GREETING_QUOTE: "Load configmap as environment variable"

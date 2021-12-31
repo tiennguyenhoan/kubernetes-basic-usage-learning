@@ -21,6 +21,6 @@ spec:
           ports:
             - containerPort: 105
           env: 
-            - name: VERSION
-              value: 3
+            - name: GREETING_QUOTE
+              value: "Deployment with direct environment variable"
 

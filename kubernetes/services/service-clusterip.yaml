@@ -1,9 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: dummy-api
-  labels:
-    app: demo
+  name: dummy
 spec:
   selector:
     app: demo
@@ -11,7 +9,3 @@ spec:
     - protocol: TCP
       port: 105
       targetPort: 105
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-

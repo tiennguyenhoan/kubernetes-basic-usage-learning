@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: dev
-  name: dummy-dev
+  name: dummy
   labels:
-    app: dev
+    app: demo
 spec:
+  type: Loadbalancer
   selector:
-    app: dev
+    app: demo
   ports:
     - protocol: TCP
       port: 105

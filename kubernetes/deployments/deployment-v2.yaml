@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: demo-container
-        image: dummy-api:1
+        image: dummy-api:2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 105

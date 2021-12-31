@@ -33,16 +33,10 @@
 </style>
 <body>
   <div style="width: 50%; margin: auto">
-    {% if name %}
-      <h1>Hello {{ name }}! My name is Dummy Api</h1>
-    {% else %}
-      <h1>Hello There! My name is Dummy Api</h1>
-    {% endif %}
-    {% for key, value in info.items() %}
-      <div style="padding: 10px; background-color: #EEE; margin: 20px">
-        <p style="font-size: 20px"><b>{{ key }}</b>: {{ value }}</p>
-      </div>
-    {% endfor %}
+    <h1>Hello There! My name is Dummy Api</h1>
+    <div style="padding: 10px; background-color: #EEE; margin: 20px">
+      <p style="font-size: 20px"><b>Host Name</b>: {{ machine_name }}</p>
+    </div>
   </div>
   <div style="width: 75%; margin: 4em auto">
     <blockquote>
