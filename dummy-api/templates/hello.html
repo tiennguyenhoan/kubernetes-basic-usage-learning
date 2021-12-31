@@ -1,0 +1,52 @@
+<!doctype html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dummy Api</title>
+</head>
+<style>
+  h1 {
+    color: #d64161;
+    font-size: 3em;
+    text-decoration: none;
+  }
+
+  blockquote {
+    background: #f0f8ff;
+    border-left: 10px solid #a4d4ff;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
+    quotes: "\201C""\201D""\2018""\2019";
+  }
+
+  blockquote:before {
+    color: #ccc;
+    content: open-quote;
+    font-size: 4em;
+    line-height: 0.1em;
+    margin-right: 0.25em;
+    vertical-align: -0.4em;
+  }
+
+  blockquote p {
+    display: inline;
+  }
+</style>
+<body>
+  <div style="width: 50%; margin: auto">
+    {% if name %}
+      <h1>Hello {{ name }}! My name is Dummy Api</h1>
+    {% else %}
+      <h1>Hello There! My name is Dummy Api</h1>
+    {% endif %}
+    {% for key, value in info.items() %}
+      <div style="padding: 10px; background-color: #EEE; margin: 20px">
+        <p style="font-size: 20px"><b>{{ key }}</b>: {{ value }}</p>
+      </div>
+    {% endfor %}
+  </div>
+  <div style="width: 75%; margin: 4em auto">
+    <blockquote>
+      <p style="font-size: 28px">{{ greeting_quote }}</p>
+    </blockquote>
+  </div>
+</body>
