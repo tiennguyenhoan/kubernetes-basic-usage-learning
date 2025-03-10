@@ -19,7 +19,7 @@ spec:
         image: dummy-api:1
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 105
+        - containerPort: 1500
         envFrom:
         - configMapRef:
             name: dummy-config

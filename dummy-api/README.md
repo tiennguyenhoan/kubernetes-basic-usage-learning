@@ -2,10 +2,11 @@
 
 <!-- vim-markdown-toc GFM -->
 
-* [Requirement](#requirement)
-* [Application](#application)
-* [Running the application](#running-the-application)
-* [Docker](#docker)
+- [Dummy-Api Usage](#dummy-api-usage)
+  - [Requirement](#requirement)
+  - [Application](#application)
+  - [Running the application](#running-the-application)
+  - [Docker](#docker)
 
 <!-- vim-markdown-toc -->
 
@@ -27,13 +28,13 @@ This application we have only two end point
 We will need to install library Flask to run this application
 
 ```bash
-pip install Flask
+pip3 install Flask
 ```
 
 Start the application with command
 
 ```bash
-python app.py
+python3 app.py
 ```
 
 Then we will see the response as this

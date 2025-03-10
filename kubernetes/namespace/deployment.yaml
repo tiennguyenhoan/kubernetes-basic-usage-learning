@@ -20,5 +20,5 @@ spec:
         image: dummy-api:2
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 105
+        - containerPort: 1500
 

@@ -16,7 +16,7 @@ COPY templates ./templates
 
 # Just acknowledge this app will be use after
 # Start container from this built image
-EXPOSE 105
+EXPOSE 1500
 
 # Command to run the application
 CMD [ "python", "./app.py" ]

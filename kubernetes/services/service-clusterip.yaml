@@ -7,5 +7,5 @@ spec:
     app: demo
   ports:
     - protocol: TCP
-      port: 105
-      targetPort: 105
+      port: 1500
+      targetPort: 1500

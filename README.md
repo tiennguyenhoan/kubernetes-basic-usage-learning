@@ -2,95 +2,93 @@
 
 ## Motivation
 
-I saw many people who want to learn with Kubernetes but they don't have much time for reading a bunch of definitions to understand how it works.
+I saw many people who want to learn with Kubernetes but they don't have much time for reading a bunch of definitions to understand how it works. Or just because many tutorials focus on the definitions of Kubernetes and they don't have practical examples of deploying an application from End to End
 
-Or just because many tutorials focus on the definitions of Kubernetes and they don't have practical examples on deploying a application from End to End
+That’s why I created this project—specifically designed for busy individuals who want to grasp the essentials of Kubernetes quickly. My aim is to equip you with a solid foundational understanding of how Kubernetes works and how to leverage it effectively in real-world scenarios.
 
-Therefore, I made this small project with the aiming to support those, who want to learn k8s but don't have much time, to have the basic mindset of how Kubernetes works and how to work with it.
+In this guide, we’ll explore key concepts of Kubernetes through clear, step-by-step examples. My hope is that this resource will empower beginners like you to dive into Kubernetes with confidence.
 
-In this guideline, we will cover basic knowledge of K8s with step by step examples and I hope this can help other beginners
-
-> If you want to learn fully about Kubernetes please read [Kubernetes documentation](https://kubernetes.io/docs/tutorials/)
+> For those who wish to deepen their understanding, I highly encourage you to check out the [Kubernetes documentation](https://kubernetes.io/docs/tutorials/)
 
 **! Importants**:
 
-- We won't go depth into Docker in this guideline, but some basic knowledge in Docker and dockerize will be required. You can go to [Docker get started](https://docs.docker.com/get-started/) for a quick review about docker before we can move on
+- We won't need in-depth knowledge of Docker usage/mechanism in this guideline, but some basic knowledge of Docker and how to Dockerize applications will be required. You can go to [Docker get started](https://docs.docker.com/get-started/) for a quick review of docker before we can move on
 
-- When you go through this guideline, the explanations may not correct 100% with the definitions on the official Documentation, since the target of this project is helping people have the general/basic knowledge on K8s.
-  Therefore, I made this as simple as I can to help understand eaiser, and some of them are just the conclusion from my experience.
+- As you go through this guideline, the explanations may not match 100% with the definitions on the official Documentation, since the target of this project is helping people have the general/basic knowledge of K8s. I've aimed to simplify the content as much as possible to make it easier to understand, and some points are the conclusions draw from my experience
 
-Please let me know if any part of this guideline have incorrect, all of contributions are appreciated to make this guideline better
+Please let me know if any part of this guideline is incorrect, all contributions are appreciated to make this guideline better
 
 <!-- vim-markdown-toc GFM -->
 
-* [Docker - Basic knowledge before we start](#docker---basic-knowledge-before-we-start)
-  * [What is Docker](#what-is-docker)
-  * [Docker Requirement](#docker-requirement)
-  * [Learning Resource](#learning-resource)
-* [Kubernetes](#kubernetes)
-  * [What is Kubernetes:](#what-is-kubernetes)
-  * [Kubernetes concepts and components](#kubernetes-concepts-and-components)
-* [Physical level](#physical-level)
-  * [Preparation](#preparation)
-  * [How to connect to Kubernetes cluster](#how-to-connect-to-kubernetes-cluster)
-  * [Simple command to work with Kubernetes Cluster](#simple-command-to-work-with-kubernetes-cluster)
-* [Logical level](#logical-level)
-  * [Preparation](#preparation-1)
-  * [Deploy basic application (Deployment, replicaSet, and pod)](#deploy-basic-application-deployment-replicaset-and-pod)
-    * [Deployment](#deployment)
-      * [Working with Deployment](#working-with-deployment)
-      * [Scenarios 1: Scale up the deployment to facilitate more load](#scenarios-1-scale-up-the-deployment-to-facilitate-more-load)
-      * [Scenarios 2:  Redeploy the application with Deployment](#scenarios-2--redeploy-the-application-with-deployment)
-      * [Scenarios 3: Rollback to Previous Deployment](#scenarios-3-rollback-to-previous-deployment)
-      * [Scenarios 4: Test Application with Port-forward](#scenarios-4-test-application-with-port-forward)
-    * [ReplicaSet](#replicaset)
-      * [Working with ReplicaSet](#working-with-replicaset)
-    * [Pod](#pod)
-      * [Working with Pods](#working-with-pods)
-      * [Scenarios 1: Testing loadbalancing request to Pod](#scenarios-1-testing-loadbalancing-request-to-pod)
-      * [Scenarios 2: Transfer files between local and Container in Pod](#scenarios-2-transfer-files-between-local-and-container-in-pod)
-      * [Scenarios 3: Execute command to container in Pod](#scenarios-3-execute-command-to-container-in-pod)
-      * [Scenarios 4: Delete (recreate) a Pod](#scenarios-4-delete-recreate-a-pod)
-  * [Expose application (Service)](#expose-application-service)
-    * [ClusterIp](#clusterip)
-    * [Nodeport](#nodeport)
-    * [Loadbalancer (Cloud)](#loadbalancer-cloud)
-    * [Scenarios: Test communicate between Pod in Cluster](#scenarios-test-communicate-between-pod-in-cluster)
-  * [Set environment for Aplication on Kubernetes](#set-environment-for-aplication-on-kubernetes)
-    * [Option 1: Set environment directly to deployment](#option-1-set-environment-directly-to-deployment)
-    * [Option 2: Using Configmap](#option-2-using-configmap)
-  * [Cronjob and jobs](#cronjob-and-jobs)
-    * [Jobs](#jobs)
-    * [Cronjob](#cronjob)
-  * [Control project's components in logical level (namespace)](#control-projects-components-in-logical-level-namespace)
-    * [Working with namespace](#working-with-namespace)
-    * [Scenarios 1: Deploy with different namespace](#scenarios-1-deploy-with-different-namespace)
+- [Kubernetes basic usage learning](#kubernetes-basic-usage-learning)
+  - [Motivation](#motivation)
+  - [Docker - Basic knowledge before we start](#docker---basic-knowledge-before-we-start)
+    - [What is Docker](#what-is-docker)
+    - [Docker Requirement](#docker-requirement)
+    - [Learning Resource](#learning-resource)
+  - [Kubernetes](#kubernetes)
+    - [What is Kubernetes:](#what-is-kubernetes)
+    - [Kubernetes concepts and components](#kubernetes-concepts-and-components)
+  - [Physical level](#physical-level)
+    - [How to connect to Kubernetes cluster](#how-to-connect-to-kubernetes-cluster)
+    - [Simple command to work with Kubernetes Cluster](#simple-command-to-work-with-kubernetes-cluster)
+  - [Logical level](#logical-level)
+    - [Preparation](#preparation)
+    - [Deploy basic application (Deployment, replicaSet, and pod)](#deploy-basic-application-deployment-replicaset-and-pod)
+      - [Deployment](#deployment)
+        - [Working with Deployment](#working-with-deployment)
+        - [Scenarios 1: Scale up the deployment to facilitate more load](#scenarios-1-scale-up-the-deployment-to-facilitate-more-load)
+        - [Scenarios 2:  Redeploy the application with Deployment](#scenarios-2--redeploy-the-application-with-deployment)
+        - [Scenarios 3: Rollback to Previous Deployment](#scenarios-3-rollback-to-previous-deployment)
+        - [Scenarios 4: Test Application with Port-forward](#scenarios-4-test-application-with-port-forward)
+      - [ReplicaSet](#replicaset)
+        - [Working with ReplicaSet](#working-with-replicaset)
+      - [Pod](#pod)
+        - [Working with Pods](#working-with-pods)
+        - [Scenarios 1: Transfer files between local and Container in Pod](#scenarios-1-transfer-files-between-local-and-container-in-pod)
+        - [Scenarios 2: Execute command to container in Pod](#scenarios-2-execute-command-to-container-in-pod)
+        - [Scenarios 3: Delete (recreate) a Pod](#scenarios-3-delete-recreate-a-pod)
+        - [Scenarios 4: Testing loadbalancing request to Pod](#scenarios-4-testing-loadbalancing-request-to-pod)
+    - [Expose application (Service)](#expose-application-service)
+      - [ClusterIp - Internal-Only Access](#clusterip---internal-only-access)
+      - [Nodeport - Exposing Services on Cluster Nodes](#nodeport---exposing-services-on-cluster-nodes)
+      - [Loadbalancer (Cloud)](#loadbalancer-cloud)
+      - [Scenarios: Test communicate between Pod in Cluster](#scenarios-test-communicate-between-pod-in-cluster)
+    - [Set environment for Aplication on Kubernetes](#set-environment-for-aplication-on-kubernetes)
+      - [Option 1: Set environment directly to deployment](#option-1-set-environment-directly-to-deployment)
+      - [Option 2: Using Configmap](#option-2-using-configmap)
+    - [Cronjob and jobs](#cronjob-and-jobs)
+      - [Jobs](#jobs)
+      - [Cronjob](#cronjob)
+    - [Control project's components in logical level (namespace)](#control-projects-components-in-logical-level-namespace)
+      - [Working with namespace](#working-with-namespace)
+      - [Scenarios 1: Deploy with different namespace](#scenarios-1-deploy-with-different-namespace)
 
 <!-- vim-markdown-toc -->
 
 ## Docker - Basic knowledge before we start
 
-If you want to learn to use Kubernetes, you must know how to work with Docker first. It's because Kubernetes will host your service/application as a Docker container from Docker image.
+Understanding Docker is essential because Kubernetes runs applications and services as containers. Docker is the most common usage container platform to learn and use, making it the ideal starting point.
 
-By that, we will need to understand how to Dockerize an application and understand to work/troubleshoot a Docker container first 
+In Docker, it's important to first learn how to Dockerize an application and gain hands-on experience in managing and troubleshooting Docker containers. These knowlegede will help a lot when we need to troubleshoot the application issue when deployed in Kubernetes cluster
 
-**Going back in time:**
+**Why Do We Use Containers to Deploy Applications?** _(Just a history story, skip if you not interested)_
 
-Years ago, most software applications were big and a application can include many services or jobs, including serving external connections as Hub, processing logical requests as a backend, or even serving frontend pages.
+In the past, most software applications were large and included multiple services or jobs, such as handling external connections (Hub), processing backend logic, or serving frontend pages. These were known as `monolithic` applications.
 
-Those software applications development used to call with name `monolithic` application.
-
-These monolithic applications are used to run a single process with all components on a handful server, this development system can work but it's hard to scale up and have many potential harmful to the server itself or the company business.
+Monolithic applications typically run as a single process with all components on a handful server, this development system can work but it's hard to scale up and have many potential harmful to the server itself or the company business
 
 For instance:
-- With many components running inside one server, this is challenging for scaling up when the server cannot handle more works.
-- Or when we have an issue with the running server, it will take time to troubleshoot and identify which components cause the issue, the root cause is from the software or the hardware. And how can we make the service online ASAP.
+- Scalability Issues: When a server reaches its capacity, scaling up becomes difficult.
+- Troubleshooting Complexity: Identifying the root cause of failures, whether the software issue or hardware related. Narrow down the component that cause issue take time and affect to the up time of services
 - And there still have many issues with the security or automating, I haven't mentioned.
 
-with the developing of software development, these big monolithic legacy applications are slowly being broken down into smaller, independently running components called `microservices`. 
+As software development evolved, monolithic applications have gradually been replaced by `microservices`, which is smaller, independent and designed to handle specific functions.
 
-The microservices can understand as an architectural pattern that we have many independent applications, which play certain roles or serve a single service. 
-These services communicate with each other via a well-defined interface using lightweight apis and because they are independently run, each service can be updated, deployed, and scaled to meet the demand for specific functions of an application.
+Microservices follow an architectural pattern where each service operates independently and communicates via lightweight APIs. This approach offers key advantages:
+- **Independent Deployment & Scaling**: Each service can be updated or scaled as needed without affecting the entire application.
+- **Improved Fault Isolation**: A failure in one service does not bring down the entire system.
+- **Enhanced Flexibility & Agility**: Teams can develop, deploy, and maintain services separately.
 
 ![monolithic-microservice](./readme/monolithic-microservice.png)
 
@@ -102,9 +100,15 @@ And this also bring the complexity on deployment process, since we have to choos
 - Networking between server (or between Application) must secure and open, if network have any issue, it also affect to the application
 - If we want to deploy the same application on the new environment, we have to reconfiguration the server again, and this will be a painful for reconfig a project was built for long time ago and some old Libraries isn't exist anymore.
 
+While microservices have replaced monolithic architectures and solved many scalability and architectural issues, there are also have new complexities that we have to handle. As a product grows or a business expands, the number of services increases, making it harder to configure, manage, and maintain the entire system efficiently.
+
+- **Dependency Conflicts**: Different applications running on the same server may require conflicting libraries.
+- **Networking Challenges**: Communication between services must be secure and reliable. Any network issue can disrupt applications.
+- **Environment Configuration**: Deploying an application in a new environment requires reconfiguring the server. This process can be painful, especially for older projects with outdated libraries that are no longer available.
+
 ![mono-micro-complex](./readme/mono-micro-complex.png)
 
-With those difficult, docker come up with a high advantage in packaging source code and deploying it in an isolated environment which is not related much to the hosting machine.
+With these challenges, `Containerize` (Docker) provides a powerful solution by packaging source code along with its dependencies into a standardized unit. This allows applications to be deployed in isolated environments, minimizing dependency conflicts and reducing reliance on the hosting machine.
 
 ![docker-app](./readme/docker-app.png)
 
@@ -112,31 +116,49 @@ With those difficult, docker come up with a high advantage in packaging source c
 
 > " Docker is an open platform for developing, shipping, and running applications. Docker enables you to separate your applications from your infrastructure so you can deliver software quickly.
 >
->   With Docker, you can manage your infrastructure in the same ways you manage your applications. By taking advantage of Docker’s methodologies for shipping, testing, and deploying code quickly, you can significantly reduce the delay between writing code and running it in production.
+>   With Docker, you can manage your infrastructure in the same ways you manage your applications. By taking advantage of Docker’s methodologies for shipping, testing, and deploying code quickly, you can significantly reduce the delay between writing code and running it in production."
 
-Basically, Docker is an open-source platform that we can package (or "Image" in docker) our application with its whole environment need, this can be a few libraries or any filesystem of an installed operating system. 
+Docker is an open-source platform that enables containerization, allowing applications to be packaged along with their entire runtime environment, including required libraries and dependencies. This ensures consistency across different deployment environments.
 
-To run your application with this Docker Image, we just need to run it on the Docker environment, and it will create a Docker Container to host/run our application
-Or we can transfer Docker Image(s) to a storage to store it for future usage or moving it between machines, it's Docker Registry
+To run an application using Docker:
+- The application and its dependencies are packaged into a Docker Image.
+- The image is executed in a Docker Container, providing an isolated and consistent runtime.
+- Docker images can be stored in a Docker Registry for future use or to be transferred between machines.
 
-With this mechanism, we can deploy to multiple servers at the same time without doing any re-configuration on hosting servers.
-Or we can only restart the docker container to make it back to the original state when happening any urgent issue and impact directly to business
+This mechanism offers several advantages:
+- **Scalable Deployment**: Applications can be deployed across multiple servers simultaneously without reconfiguring hosting environments.
+- **Quick Recovery**: If an issue arises, simply restarting the container restores it to its original state, minimizing downtime and business impact.
 
-There are three main Docker components:
+There are 4 key points related to docker we can focus on:
+**Dockerfile**:
+- Images are built using a Dockerfile, which specifies a base image and a set of commands to copy source code, install dependencies, and configure the environment.
+- Defines the environment, dependencies, and commands needed to run an application.
+  Example:
+  ```
+  FROM node:18  
+  WORKDIR /app  
+  COPY . .  
+  RUN npm install  
+  CMD ["node", "server.js"]  
+  ```
 
 **Images** :
-- Basically, a Docker image has everything needed to run a containerized application, including code, config files, environment variables, libraries, and runtimes. 
-- To make a Docker image, we must have a Dockerfile that including a base image and a set of commands to copy application source code to the base image or install needed libraries
+- A Docker image contains everything required to run a containerized application, including application code, configuration files, environment variables, libraries, and runtime. 
+- Images are built using a Dockerfile
+- Stored in a registry like Docker Hub or a private registry.
 
 **Containers** :
-- We can understand the docker container is virtualized runtime environment of an application from Docker image, which means we start running our application under the docker environment.
-- We can have multiple containers running on one hosting server and it's completely isolated from both host and all other containers. 
-  However, Container can be set with a network to connect between containers to containers or expose ports to open the connection between the host
+- A Docker container is a lightweight, virtualized runtime environment that runs an application based on a Docker image.
+- Multiple containers can run on a single host, each completely isolated from the host system and other containers.
+- Containers can be networked together to communicate with each other or exposed to the host system using ports for external access.
 
 **Registry** :
-- A Docker Registry is a place that stores your Docker images and facilitates easy sharing of those images between different users and computers.
-  When you build your image, you can either run it on the computer you’ve built it on, or you can push (upload) the image to a registry and then pull (download) it on another computer and run it there.
-- Certain registries are public (Docker hub), allowing anyone to pull images from it, while others are private, only accessible to certain people or machines.
+- A Docker registry is a storage system for Docker images, enabling easy sharing and deployment across different machines.
+- Once an image is built, it can be:
+  - Run locally on the machine where it was built.
+  - Pushed (uploaded) to a registry for future use or distribution.
+  - Pulled (downloaded) to another machine and executed.
+- Public registries, like Docker Hub, allow access to community and official images, while private registries restrict access to authorized users for security and control.
 
 ![Docker-flow](./readme/docker-flow.png)
 
@@ -144,8 +166,11 @@ There are three main Docker components:
 ### Docker Requirement
 
 To follow this guideline, you must have:
-- Docker installed in your machine, check [Docker install](https://docs.docker.com/engine/install/) if you don't have it
+- Docker Desktop
+  - [Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
+  - [Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
 
+- Docker installed for your system check [Linux](https://docs.docker.com/engine/install/)
 
 ### Learning Resource
 
@@ -154,6 +179,30 @@ I have created a python application to demonstrate this guideline and I call it 
 If you want to run it directly in your local to know how it's working, please check [dummy-api Readme](./dummy-api/README.md)
 
 In the project, I have created a [Dockerfile](./dummy-api/Dockerfile) which contains steps to build a docker image
+  ```
+  # The base image 
+  FROM python:3.10.1-alpine
+
+  # Install Flask to run this application
+  RUN pip install --no-cache-dir Flask    
+
+  # Create working folder
+  RUN mkdir /app  
+
+  # Set working dir for the docker container
+  WORKDIR /app
+
+  # Copy source code to working folder
+  COPY app.py ./
+  COPY templates ./templates
+
+  # Just acknowledge this app will be use after
+  # Start container from this built image
+  EXPOSE 1500
+
+  # Command to run the application
+  CMD [ "python", "./app.py" ]
+  ```
 
 Then we in the next step I will show how can we dockerize this application to prepare to deploy it to Kubernetes env.
 Make sure your Docker server is up and running. Now we will create a Docker image in our local machine.
@@ -181,7 +230,7 @@ Make sure your Docker server is up and running. Now we will create a Docker imag
 Execute command below, it will run your built image as a docker container and we will able to access it
 
 ```bash
-  docker run -d --name dummy-container -p 105:105 dummy-api:1
+  docker run -d --name dummy-container -p 1500:1500 dummy-api:1
 
   # Args explain
   #  -d      : The container will run in background
@@ -190,7 +239,7 @@ Execute command below, it will run your built image as a docker container and we
 
 ```
 
-Then you can test it by open your browser and navigate to http://localhost:105
+Then you can test it by open your browser and navigate to http://localhost:1500
 
 - To view all of your docker container
     ```bash 
@@ -202,9 +251,9 @@ Then you can test it by open your browser and navigate to http://localhost:105
       docker logs -f dummy-container
     ```
 
-- To run shell inside a container
+- To run connect to the container
     ```bash
-      docker exec -it dummy-container sh   # Some container have bash shell so we can use it instead of "sh"
+      docker exec -it dummy-container sh   # Some container have bash shell so we can use "bash" instead of "sh"
     ```
 
 -  To stop the container and all of it changes content still there
@@ -236,47 +285,41 @@ Then you can test it by open your browser and navigate to http://localhost:105
 
 ## Kubernetes
 
-In the above session, we have a general idea about Docker and the usage of Docker or containerization in helping deploy microservice architecture.
-And that was great since Docker solve most of the issues of software development, and Docker seems to have all the parts we need to build, deploy an application. 
-But why do we still need Kubernetes?
+In the previous section, we explored Docker and how containerization simplifies deploying microservices. Docker effectively addresses many software development challenges, providing all the essential tools for building and deploying applications.
 
-**Going back in time**:
+However, if Docker solves so much, why do we still need Kubernetes? 
 
-With the evolution of software development:
+**A Brief Look at Deployment Evolution** _(Just a history story, skip if you not interested)_
+
+Over time, deployment strategies have evolved to address scalability, resource utilization, and management challenges.
 
 ![container evolution](./readme/container_evolution.svg)
 
-- **Traditional deployment**:
-
-    Applications ran directly on the physical servers and as mentioned in the above session, we will have many potential issues with the server, 
-    from libraries conflict between applications to one application can damage all other applications due to crashes or hack. 
-
-    Besides, the resource consumption between application isn't defined clearly, which lead to one application can use most of the server resource and all other application would crash or underperforming. 
-
-    And to avoid those issues, each application must run on a different server, but this solution isn't utilized hardware resources and it causes organizations more money to maintain those servers.
-
+- **Traditional deployment** (On-Premise Servers):
+    + Applications ran directly on the physical servers and as mentioned in the above session, we will have many potential issues with the server, from libraries conflict between applications to one application can damage all other applications due to crashes or hacks. 
+    + Besides, the resource consumption between application isn't defined clearly, which lead to one application can use most of the server resource and all other application would crash or underperforming. 
+    + And to avoid those issues, each application must run on a different server, but this solution isn't utilized hardware resources and it causes organizations more money to maintain those servers.
 
 - **Virtualized deployment**:
-    
-    For archiving the goals of isolated application on each server but still reducing the maintenace cost, we applied virtualization.
-    
-    With virtualization, we can split a physical server into small isolated Virtual Machines (VMs). With this approach, we can actively control the resource usage of each application and security
-    
-    However, since each VM is a full machine running all the components, including OS system, libraries, etc., this makes jobs for provisioning, managing and backing up much more difficult and required more skills to do it
-
-    Besides, managing a bunch of VMs and maintenance network between VMs also a challenging for Ops
-
+    To achieve application isolation while optimizing hardware usage, virtualization was introduced.
+    + How It Works: A physical server is split into multiple Virtual Machines (VMs), each running its own OS, dependencies, and applications.
+    + Benefits: Improved resource allocation, security, and cost efficiency compared to traditional servers.
+    + Challenges:
+      + Each VM runs a full OS, making provisioning, backup, and management complex.
+      + Maintaining and networking multiple VMs requires specialized skills and increases operational challenges.
 
 - **Containers deployment**:
+    Containers emerged as a lightweight alternative to VMs, designed to separate software from hardware while maintaining efficiency.
   
-    Follow with the VMs, Containers deployment is a new evolution with the concept to separate software deployment with hardware.
+    Key Differences from VMs:
+    + Containers share the host OS, rather than requiring separate OS installations.
+    + Each container holds only the application and necessary libraries, reducing overhead.
+    + Containers provide better scalability, efficiency, and faster startup times than VMs.
 
-    Applications will be isolated in an individual areas with necessary components/libraries but not including the Operating System (OS), which will share between containers in the same server.
-
-    However, the usage of containerization still related much to manual works but with the growth of the product or expanding of the business domain, Dev team always have to deal with other stuff:
-    - Manage deployed containers in server to ensure no downtime, this will include monitoring and failure-handling system
-    - We cannot deploy manually everything, those works must be automated and acknowledged when the deployment isn't success
-    - Managing resources/servers to keep server always has capable to load new deployment and recycle logs to avoid disk run out.
+    As businesses grow, managing containerized applications manually becomes difficult. DevOps teams must:
+    + Ensure high availability by monitoring deployments and handling failures.
+    + Automate deployments to prevent errors and minimize downtime.
+    + Manage server resources efficiently, ensuring enough capacity for new deployments and handling log recycling to avoid disk space issues.
 
 That's how Kubernetes comes to the rescue! Kubernetes provides you with a framework to run distributed systems resiliently.
 
@@ -284,44 +327,40 @@ It takes care of scaling and failover for your application, provides deployment 
 
 ### What is Kubernetes:
 
-> " Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available.
+> "Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available."
 
 In a simple understanding, Kubernetes (also known as k8s) is an open-source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.
 
-Kubernetes can speed up, automates the development process by making it easy with configuration template in Yaml format or command, with simple defined components and can load it directly to the cluster for deployment.
-And it also provides self-healing for applications with features to detect and restart services when container crashes.
+Key Benefits of Kubernetes:
+- **Automated Deployment & Scaling**: Define configurations using YAML files or commands, making deployments seamless.
+- **Self-Healing Mechanism**: Detects and restarts failed containers automatically.
+- **Simplifies DevOps Workflows**: Developers can package applications with basic Docker knowledge, while Ops teams focus on managing clusters rather than individual applications.
 
-With the benefits of Kubernetes, any developer can package up applications and deploy them on Kubernetes with basic Docker knowledge.
-And the role of Ops will shift from supervising individual applications to managing the entire Kubernetes cluster
+With Kubernetes, managing containerized applications becomes efficient, reliable, and scalable-eliminating manual intervention in many operational tasks.
 
 ### Kubernetes concepts and components
 
-To make this guideline simple and help you with a general overview of Kubernetes, I will split the concept of Kubernetes into 2 levels, physical and logical levels.
+To simplify Kubernetes concepts, let's break it down into two levels:
+- **Physical Level**: Covers the hardware components of Kubernetes, including cluster structure, node management, and networking. This helps in understanding how Kubernetes is set up and managed. More related to Ops
 
-- In physical level, we have definitions related to hardware components of Kubernetes, and how we can connect/manage Kubernetes
-
-- In logical level, we will learn how to deploy an application to Kubernetes and also go through some basic components for deploying an application to Kubernetes.
+- **Logical Level**: Focuses on application deployment within Kubernetes. Here, we’ll explore key components like Pods, Deployments, Services, and how they work together to manage containerized applications. And also all command to help work with Kubernetes
 
 ## Physical level
 
-Kubernetes is not about a single server hosting a management system, it's a group of many servers (at least 2 servers) connected into a cluster.
+Unlike a traditional single-server management system, Kubernetes operates as a cluster of multiple **connected servers** (at least two). Each server in the cluster is called a node, which can be either a physical or virtual machine.
 
-In Kubernetes cluster, all connected servers will be a "node" of the cluster and a node can be a virtual or physical server, depending on the cluster
+Kubernetes nodes are categorized into two types:
+- **Master Node** (Control Plane): The brain of the cluster, responsible for monitoring, scheduling, and managing workloads. It acts like a virtual system administrator, ensuring the cluster runs smoothly 24/7.
 
-Node(s) in Kubernetes is divided into 2 types, Master and worker.
-
-- **Master Node**: Usually only one server and it will be the controller of the entire cluster.
-
-    In another understand, this looks like a virtual Sys Admin, who will watch your system 24/7 and do all the action needed to keep the cluster running
-
-- **Worker Node(s)**: Is the group of servers to host your running applications (containers)
+- **eWorker Nodes**: These servers run the actual containerized applications. They receive instructions from the Master Node and execute workloads accordingly.
 
 ![kubernetes-architecture](./readme/kubernetes-architecture.png)
 
 > Note: In a learning or resource-limited environment, you might have only one node and it will have both roles as Master and Worker
 
-### Preparation
+### How to connect to Kubernetes cluster
 
+**Preparation**
 To follow this guideline, you must have:
 - Docker installed in your machine, check [Docker install](https://docs.docker.com/engine/install/) if you don't have it
 
@@ -329,23 +368,14 @@ To follow this guideline, you must have:
   - Docker Desktop: Read [Docker Deskop - Kubernetes](https://docs.docker.com/desktop/kubernetes/) for how to enable K8s
   - Minikube: If you don't have kubernetes in your Docker Desktop, then follow [Minikube](https://github.com/kubernetes/minikube) to install it.
 
-- kubectl command which will use most of the time to work with Kubernetes, check [Kubernetes install tools](https://kubernetes.io/docs/tasks/tools/)
-
-### How to connect to Kubernetes cluster
-
-To connect to a Kubernetes cluster, we must have 2 things, a kubeconfig file and Kubectl (CLI)
-
+To interact with a Kubernetes cluster, you need two essential components:
 - **kubectl**:
-
-    Is a command line interface (CLI) to help us interact with Kubernetes from managing resources to setup and deploy your application. 
-
-    We can install the Kubectl command in [Kubernetes install tools](https://kubernetes.io/docs/tasks/tools/)
+    A command-line tool that allows you to manage Kubernetes resources, deploy applications, and monitor cluster activities. We can install the Kubectl command in [Kubernetes install tools](https://kubernetes.io/docs/tasks/tools/)
 
 - **Kubeconfig**:
+    A configuration file that stores authentication details and access information for the Kubernetes cluster. It acts as a key to securely connect to and interact with the cluster.
 
-    Can understand as the key to access to the Kubernetes cluster, this file contains information and credential of Kubernetes cluster.
-
-    The syntax of Kubeconfig file should similar to this:
+    A typical Kubeconfig file follows this structure:
 
     ```yaml
     apiVersion: v1
@@ -369,22 +399,17 @@ To connect to a Kubernetes cluster, we must have 2 things, a kubeconfig file and
         client-key: ...            # Client key to authority with Kubernetes
     ```
 
-By default kubectl will expect kubeconfig, represented as a file named `config` to be present in the `$HOME/.kube` directory.
+    - By default, kubectl looks for the Kubeconfig file in `$HOME/.kube/config`
 
-Then if we want to do anything with the cluster, just type down the command
-```bash
-  kubectl cluster-info
-```
-
-We also can specify other kubeconfig files by setting the KUBECONFIG environment variable 
-```bash
-  export KUBECONFIG=/path/to/my/kubeconfig
-  kubectl cluster-info
-```
-Or by setting the --kubeconfig flag.
-```bash
-  kubectl cluster-info --kubeconfig /path/to/my/kubeconfig
-```
+    - We also can specify other kubeconfig files by setting the KUBECONFIG environment variable 
+    ```bash
+      export KUBECONFIG=/path/to/my/kubeconfig
+      kubectl cluster-info
+    ```
+    - Or by setting the --kubeconfig flag.
+    ```bash
+      kubectl cluster-info --kubeconfig /path/to/my/kubeconfig
+    ```
 
 ### Simple command to work with Kubernetes Cluster
 
@@ -426,104 +451,96 @@ For the basic, we have serveral command to work with k8s cluster in "physical" w
   # Sample
   $ kubectl describe node/docker-desktop
   Name:               docker-desktop
-  Roles:              master
-  Labels:             beta.kubernetes.io/arch=arm64
+  Roles:              control-plane
+  Labels:             beta.kubernetes.io/arch=amd64
                       beta.kubernetes.io/os=linux
-                      kubernetes.io/arch=arm64
+                      kubernetes.io/arch=amd64
                       kubernetes.io/hostname=docker-desktop
                       kubernetes.io/os=linux
-                      node-role.kubernetes.io/master=
-  Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: /var/run/dockershim.sock
+                      node-role.kubernetes.io/control-plane=
+                      node.kubernetes.io/exclude-from-external-load-balancers=
+  Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: unix:///var/run/cri-dockerd.sock
                       node.alpha.kubernetes.io/ttl: 0
                       volumes.kubernetes.io/controller-managed-attach-detach: true
-  CreationTimestamp:  Wed, 19 May 2021 09:22:29 +0700
+  CreationTimestamp:  Thu, 13 Feb 2025 15:58:42 +0700
   Taints:             <none>
   Unschedulable:      false
   Lease:
     HolderIdentity:  docker-desktop
     AcquireTime:     <unset>
-    RenewTime:       Fri, 14 Jan 2022 14:53:15 +0700
+    RenewTime:       Fri, 07 Mar 2025 16:14:14 +0700
   Conditions:
     Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
     ----             ------  -----------------                 ------------------                ------                       -------
-    MemoryPressure   False   Fri, 14 Jan 2022 14:53:20 +0700   Thu, 03 Jun 2021 14:08:29 +0700   KubeletHasSufficientMemory   kubelet has sufficient memory available
-    DiskPressure     False   Fri, 14 Jan 2022 14:53:20 +0700   Thu, 03 Jun 2021 14:08:29 +0700   KubeletHasNoDiskPressure     kubelet has no disk pressure
-    PIDPressure      False   Fri, 14 Jan 2022 14:53:20 +0700   Thu, 03 Jun 2021 14:08:29 +0700   KubeletHasSufficientPID      kubelet has sufficient PID available
-    Ready            True    Fri, 14 Jan 2022 14:53:20 +0700   Thu, 03 Jun 2021 14:08:29 +0700   KubeletReady                 kubelet is posting ready status
+    MemoryPressure   False   Fri, 07 Mar 2025 16:14:17 +0700   Thu, 13 Feb 2025 15:58:40 +0700   KubeletHasSufficientMemory   kubelet has sufficient memory available
+    DiskPressure     False   Fri, 07 Mar 2025 16:14:17 +0700   Thu, 13 Feb 2025 15:58:40 +0700   KubeletHasNoDiskPressure     kubelet has no disk pressure
+    PIDPressure      False   Fri, 07 Mar 2025 16:14:17 +0700   Thu, 13 Feb 2025 15:58:40 +0700   KubeletHasSufficientPID      kubelet has sufficient PID available
+    Ready            True    Fri, 07 Mar 2025 16:14:17 +0700   Thu, 13 Feb 2025 15:58:43 +0700   KubeletReady                 kubelet is posting ready status
   Addresses:
-    InternalIP:  192.168.65.4
+    InternalIP:  192.168.65.3
     Hostname:    docker-desktop
   Capacity:
-    cpu:                6
-    ephemeral-storage:  206160872Ki
+    cpu:                22
+    ephemeral-storage:  1055762868Ki
     hugepages-1Gi:      0
     hugepages-2Mi:      0
-    hugepages-32Mi:     0
-    hugepages-64Ki:     0
-    memory:             12250136Ki
+    memory:             16097212Ki
     pods:               110
   Allocatable:
-    cpu:                6
-    ephemeral-storage:  189997859321
+    cpu:                22
+    ephemeral-storage:  972991057538
     hugepages-1Gi:      0
     hugepages-2Mi:      0
-    hugepages-32Mi:     0
-    hugepages-64Ki:     0
-    memory:             12147736Ki
+    memory:             15994812Ki
     pods:               110
   System Info:
-    Machine ID:                 aa22a80b-e31d-4df8-9fdc-394a59734df5
-    System UUID:                aa22a80b-e31d-4df8-9fdc-394a59734df5
-    Boot ID:                    a68e41e4-21b4-44ff-9467-8fba571a2dae
-    Kernel Version:             5.10.76-linuxkit
+    Machine ID:                 e4860baa-8fb9-4d2d-b78f-2d7c44fa303e
+    System UUID:                e4860baa-8fb9-4d2d-b78f-2d7c44fa303e
+    Boot ID:                    dbec2d66-564d-485f-b061-25563def3de3
+    Kernel Version:             5.15.167.4-microsoft-standard-WSL2
     OS Image:                   Docker Desktop
     Operating System:           linux
-    Architecture:               arm64
-    Container Runtime Version:  docker://20.10.11
-    Kubelet Version:            v1.19.7
-    Kube-Proxy Version:         v1.19.7
-  Non-terminated Pods:          (12 in total)
-    Namespace                   Name                                         CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
-    ---------                   ----                                         ------------  ----------  ---------------  -------------  ---
-    ingress-nginx               ingress-nginx-controller-69db7f75b4-r9rdj    100m (1%)     0 (0%)      90Mi (0%)        0 (0%)         17d
-    kube-system                 coredns-5d696d9866-5qnj5                     100m (1%)     0 (0%)      70Mi (0%)        170Mi (1%)     3d14h
-    kube-system                 coredns-5d696d9866-vwflh                     100m (1%)     0 (0%)      70Mi (0%)        170Mi (1%)     3d14h
-    kube-system                 etcd-docker-desktop                          0 (0%)        0 (0%)      0 (0%)           0 (0%)         240d
-    kube-system                 kube-apiserver-docker-desktop                250m (4%)     0 (0%)      0 (0%)           0 (0%)         240d
-    kube-system                 kube-controller-manager-docker-desktop       200m (3%)     0 (0%)      0 (0%)           0 (0%)         240d
-    kube-system                 kube-proxy-xntwj                             0 (0%)        0 (0%)      0 (0%)           0 (0%)         240d
-    kube-system                 kube-scheduler-docker-desktop                100m (1%)     0 (0%)      0 (0%)           0 (0%)         240d
-    kube-system                 storage-provisioner                          0 (0%)        0 (0%)      0 (0%)           0 (0%)         240d
-    kube-system                 vpnkit-controller                            0 (0%)        0 (0%)      0 (0%)           0 (0%)         240d
+    Architecture:               amd64
+    Container Runtime Version:  docker://28.0.1
+    Kubelet Version:            v1.31.4
+    Kube-Proxy Version:         v1.31.4
+  Non-terminated Pods:          (9 in total)
+    Namespace                   Name                                      CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+    ---------                   ----                                      ------------  ----------  ---------------  -------------  ---
+    kube-system                 coredns-7c65d6cfc9-c5h5s                  100m (0%)     0 (0%)      70Mi (0%)        170Mi (1%)     22d
+    kube-system                 coredns-7c65d6cfc9-lkckw                  100m (0%)     0 (0%)      70Mi (0%)        170Mi (1%)     22d
+    kube-system                 etcd-docker-desktop                       100m (0%)     0 (0%)      100Mi (0%)       0 (0%)         22d
+    kube-system                 kube-apiserver-docker-desktop             250m (1%)     0 (0%)      0 (0%)           0 (0%)         22d
+    kube-system                 kube-controller-manager-docker-desktop    200m (0%)     0 (0%)      0 (0%)           0 (0%)         22d
+    kube-system                 kube-proxy-746ll                          0 (0%)        0 (0%)      0 (0%)           0 (0%)         22d
+    kube-system                 kube-scheduler-docker-desktop             100m (0%)     0 (0%)      0 (0%)           0 (0%)         22d
+    kube-system                 storage-provisioner                       0 (0%)        0 (0%)      0 (0%)           0 (0%)         22d
+    kube-system                 vpnkit-controller                         0 (0%)        0 (0%)      0 (0%)           0 (0%)         22d
   Allocated resources:
     (Total limits may be over 100 percent, i.e., overcommitted.)
     Resource           Requests    Limits
     --------           --------    ------
-    cpu                850m (14%)  0 (0%)
-    memory             230Mi (1%)  340Mi (2%)
+    cpu                850m (3%)   0 (0%)
+    memory             240Mi (1%)  340Mi (2%)
     ephemeral-storage  0 (0%)      0 (0%)
     hugepages-1Gi      0 (0%)      0 (0%)
     hugepages-2Mi      0 (0%)      0 (0%)
-    hugepages-32Mi     0 (0%)      0 (0%)
-    hugepages-64Ki     0 (0%)      0 (0%)
-  Events:              <none>
+  Events:
+    Type     Reason                             Age                From             Message
+    ----     ------                             ----               ----             -------
+    Normal   Starting                           22d                kube-proxy
+    ...
   ```
 
 ## Logical level
 
-In a logical way, Kubernetes come up with lots of new definitions and components.
-For each component, it will have a specific role to support deploying, managing containers (applications).
+Kubernetes introduces several components, each with a specific role in deploying and managing containerized applications.
 
-Therefore to help understand easier, through this guideline we will deploy a simple application to Kubernetes
-and I will explain each related component in each step.
+To make learning easier, this guide will walk you through deploying a simple application on Kubernetes, explaining each component step by step.
 
 > **! Important**:
 >
->   To do most of the deploying process, we will use the Yaml template, which is provided by Kubernetes, and only use the command to execute apply the template.
->
->   Although we can do deployment with command-line, it's quite complicated to set advantage parameters during the deployment process and it's hard to scale up with automation.
->
->   And we will use command-lines to interact with the Kubernetes components
+>   We will use YAML templates for deployment and kubectl to execute and manage interactions with the cluster.
 
 ### Preparation
 
@@ -534,9 +551,9 @@ To follow this guideline, you must have:
   - Docker Desktop: Read [Docker Deskop - Kubernetes](https://docs.docker.com/desktop/kubernetes/) for how to enable K8s
   - Minikube: If you don't have kubernetes in your Docker Desktop, then follow [Minikube](https://github.com/kubernetes/minikube) to install it.
 
-  > **Note**: For this guideline I will use Docker Desktop as the test environment for Kubernetes
-
-- kubectl command which will use most of the time to work with Kubernetes, check [Kubernetes install tools](https://kubernetes.io/docs/tasks/tools/)
+To interact with a Kubernetes cluster, you need two essential components:
+- **kubectl**:
+    A command-line tool that allows you to manage Kubernetes resources, deploy applications, and monitor cluster activities. We can install the Kubectl command in [Kubernetes install tools](https://kubernetes.io/docs/tasks/tools/)
 
 >**! Important**:
 >
@@ -544,13 +561,13 @@ To follow this guideline, you must have:
 
 ### Deploy basic application (Deployment, replicaSet, and pod)
 
-At this point, I will assume we already have Docker desktop running on our local machine as the test environment and it has Kubernetes enabled.
+At this point, let's assume:
+- You have access to a Kubernetes cluster, or Kubernetes is set up and running locally.
+- We have already built a Docker image for the Dummy-api application, in the above example
 
-And also created a docker image for the `Dummy-api` application.
+Now, we can begin deploying our application to Kubernetes.
 
-Then we will begin deploying this application to Kubernetes environment.
-
-But first, we will have a deployment template to guide Kubernetes on how to deploy our application.
+Before deployment, we need a YAML template to guide Kubernetes on how to deploy our application.
 
 > I have prepared the deployment template for us to use on this sample, [./kubernetes/deployments/deployment.yaml](./kubernetes/deployments/deployment.yaml)
 ```yaml
@@ -575,7 +592,7 @@ spec:                                    # Deployment content
         image: dummy-api:1               # Image usage
         imagePullPolicy: IfNotPresent    # By default it's "Always" but for local env I use this for saving time
         ports:                           # Port of container
-        - containerPort: 105
+        - containerPort: 1500
 ```
 
 Then execute command to deploy this to Kubernetes cluster
@@ -597,32 +614,35 @@ NAME        READY   UP-TO-DATE   AVAILABLE   AGE
 dummy-api   1/1     1            1           10s
 ```
 
-That it, it's simple like that.
+That's it! Simple as that. 🚀
 
 **But what exactly happening in Kubernetes**:
 
-When you start loading your deployment template to deploy your application into Kubernetes.
-It's not simple as putting your application to any server in Kubernetes, this is the combining of 3 main components of Kubernetes,
-Deployment, replicaSet and Pod(s).
+When deploying your application in Kubernetes, it’s not as simple as just placing it on any server. The process involves three key components:
+- **Deployment**: Defines how your application should be managed and updated.
+- **ReplicaSet**: Ensures the desired number of instances (Pods) are running.
+- **Pods**: The smallest deployable unit, containing your application’s container(s).
 
 ![deployment-replicaSet-pod](./readme/deployment-replicaset-pod.png)
 
+> We will explore each one of them in below sessions
+
 #### Deployment
 
-At first, the "Deployment" resource will be created after triggering the deploy command.
+When you trigger the deployment command, the Deployment resource is created.
 
-The deployment is used to control the life cycle of the application on Kubernetes, which means this will tell Kubernetes how to create or modify the related resources that hold your containerized application. All of the features include:
-- Control the number of replicate containers that will be run on Kubernetes
-- Help roll out the new update of your application, including deployment strategies to minimize deployment downtime or significantly impact the user.
+A Deployment in Kubernetes manages the lifecycle of your application, controlling how it is created, updated, and maintained. It ensures that your application runs reliably with features like:
+- Replica management: Defines how many instances (Pods) of your application should be running.
+- Rolling updates & rollback: Enables seamless updates with minimal downtime and the ability to revert if needed.
 
-    > **! If you don't know**:
-    >
-    > Blue/Green Deployment is one of the popular deployment strategies in Kubernetes
-    >
-    > Blue/Green deployment consists of two environments; Blue and Green.
-    > The Green environment receives public traffic which hosts your current application. On the flip side, the Blue environment is not available to the public and contains new application versions. 
-    >
-    > After a few health checks on the Blue environment without any crash on the containerized level, the Blue environment will become green for serving the new connection and the old environment will be destroyed to save resource
+> **Did You Know?**
+>
+> One common Kubernetes deployment strategy is Blue/Green Deployment:
+>
+>-  The Green environment hosts the current application and serves user traffic.
+>- The Blue environment contains the new application version but is not yet live.
+>
+>After successful health checks, Kubernetes switches traffic to Blue, making it live, and decommissions Green to free up resources. This approach minimizes downtime and ensures a smooth update process.
 
 ##### Working with Deployment
 
@@ -654,7 +674,7 @@ $ kubectl describe deployment/[DEPLOYMENT NAME]
 $ kubectl describe deployment/dummy-api
 Name:                   dummy-api
 Namespace:              default
-CreationTimestamp:      Mon, 10 Jan 2022 16:31:48 +0700
+CreationTimestamp:      Fri, 07 Mar 2025 16:50:20 +0700
 Labels:                 app=demo
                         version=1
 Annotations:            deployment.kubernetes.io/revision: 1
@@ -668,7 +688,7 @@ Pod Template:
   Containers:
    demo-container:
     Image:        dummy-api:1
-    Port:         105/TCP
+    Port:         1500/TCP
     Host Port:    0/TCP
     Environment:  <none>
     Mounts:       <none>
@@ -689,7 +709,7 @@ Events:
 > **! Tips**:
 > 
 > Sometimes you will your application isn't live but the message shows the deployment has been successfully deployed.
-> You may need to check the "Events" in the deployment resource, it can provide some details on the issue
+> To diagnose the issue, check the "Events" in the Deployment resource. Events provide detailed insights into potential problems, such as scheduling failures, insufficient resources, or container startup issues.
 
 - **Delete the deployment**:
 
@@ -760,7 +780,7 @@ When we want to redeploy the application with the new version, we just need to u
               image: dummy-api:2              # Updated new docker image version
               imagePullPolicy: IfNotPresent
               ports:
-              - containerPort: 105
+              - containerPort: 1500
       ```
 
   1. Start deploying this template to Kubernetes cluster
@@ -778,7 +798,7 @@ When we want to redeploy the application with the new version, we just need to u
       # Sample response
       Name:                   dummy-api
       Namespace:              default
-      CreationTimestamp:      Mon, 10 Jan 2022 16:31:48 +0700
+      CreationTimestamp:      Fri, 07 Mar 2025 16:54:19 +0700
       Labels:                 app=demo
       Annotations:            deployment.kubernetes.io/revision: 2
       Selector:               app=demo
@@ -791,7 +811,7 @@ When we want to redeploy the application with the new version, we just need to u
         Containers:
          demo-container:
           Image:        dummy-api:2
-          Port:         105/TCP
+          Port:         1500/TCP
           Host Port:    0/TCP
           Environment:  <none>
           Mounts:       <none>
@@ -807,10 +827,7 @@ When we want to redeploy the application with the new version, we just need to u
         Type    Reason             Age   From                   Message
         ----    ------             ----  ----                   -------
         Normal  ScalingReplicaSet  48m   deployment-controller  Scaled up replica set dummy-api-55b48f6c47 to 1
-        Normal  ScalingReplicaSet  18m   deployment-controller  Scaled up replica set dummy-api-55b48f6c47 to 4
-        Normal  ScalingReplicaSet  9s    deployment-controller  Scaled down replica set dummy-api-55b48f6c47 to 1
-        Normal  ScalingReplicaSet  9s    deployment-controller  Scaled up replica set dummy-api-5b599c48c6 to 1
-        Normal  ScalingReplicaSet  7s    deployment-controller  Scaled down replica set dummy-api-55b48f6c47 to 0
+        ...
       ```
 
 ##### Scenarios 3: Rollback to Previous Deployment
@@ -842,7 +859,7 @@ Pod Template:
   Containers:
    demo-container:
     Image:	dummy-api:2
-    Port:	105/TCP
+    Port:	1500/TCP
     Host Port:	0/TCP
     Environment:	<none>
     Mounts:	<none>
@@ -865,7 +882,7 @@ $ kubectl describe deployment/dummy-api
 # Sample response
 Name:                   dummy-api
 Namespace:              default
-CreationTimestamp:      Mon, 10 Jan 2022 16:31:48 +0700
+CreationTimestamp:      Fri, 07 Mar 2025 16:55:02 +0700
 Labels:                 app=demo
 Annotations:            deployment.kubernetes.io/revision: 4
 Selector:               app=demo
@@ -878,7 +895,7 @@ Pod Template:
   Containers:
    demo-container:
     Image:        dummy-api:1
-    Port:         105/TCP
+    Port:         1500/TCP
     Host Port:    0/TCP
     Environment:  <none>
     Mounts:       <none>
@@ -894,54 +911,47 @@ Events:
   Type    Reason             Age                  From                   Message
   ----    ------             ----                 ----                   -------
   Normal  ScalingReplicaSet  7m53s                deployment-controller  Scaled up replica set dummy-api-5b599c48c6 to 2
-  Normal  ScalingReplicaSet  7m6s                 deployment-controller  Scaled up replica set dummy-api-565c696947 to 1
-  Normal  ScalingReplicaSet  7m5s                 deployment-controller  Scaled down replica set dummy-api-5b599c48c6 to 1
-  Normal  ScalingReplicaSet  7m5s                 deployment-controller  Scaled up replica set dummy-api-565c696947 to 2
-  Normal  ScalingReplicaSet  7m4s                 deployment-controller  Scaled down replica set dummy-api-5b599c48c6 to 0
-  Normal  ScalingReplicaSet  43s (x2 over 3h42m)  deployment-controller  Scaled up replica set dummy-api-55b48f6c47 to 1
-  Normal  ScalingReplicaSet  42s                  deployment-controller  Scaled down replica set dummy-api-565c696947 to 1
-  Normal  ScalingReplicaSet  42s                  deployment-controller  Scaled up replica set dummy-api-55b48f6c47 to 2
-  Normal  ScalingReplicaSet  41s                  deployment-controller  Scaled down replica set dummy-api-565c696947 to 0
+  ...
 ```
 
 As we saw, the `Image` has swapped to `dummy-api:1` which is dedicated to the first deployment
 
-
 ##### Scenarios 4: Test Application with Port-forward
 
-Right now, the deployed application cannot be connected from anywhere.
-If you have tried access to url `http://localhost:105` it won't work.
+Right now, the deployed application is not accessible from anywhere.
+If you try accessing `http://localhost:1500`, it won’t work.
 
-To make the appllication can serve the connection, we will mention it in [Expose application (Service)](#expose-application-service)
+To make the application available, we need to expose it using a Service, which we’ll cover in [Expose application (Service)](#expose-application-service)
 
-However, if we want to test it in debug mode, we can execute the command below
+However, for debugging purposes, you can temporarily test the application using the following command:
 ```bash
-$ kubectl port-forward deployment/dummy-api 1055:105
+$ kubectl port-forward deployment/dummy-api 1500:1500
 
 # Sample response
-Forwarding from 127.0.0.1:1055 -> 105
-Forwarding from [::1]:1055 -> 105
+Forwarding from 127.0.0.1:1500 -> 1500
+Forwarding from [::1]:1500 -> 1500
 ```
 
-Then we can access our application via url `http://localhost:1055`
+Then we can access our application via url `http://localhost:1500`
 
 ```bash
-$ curl http://localhost:1055/ping
+$ curl http://localhost:1500/ping
 pong!%
 ```
 
 #### ReplicaSet
 
-The "Deployment" resource aims to focus on controlling the life cycle of the application and when a new deployment is executed, ReplicaSet will be created after the deployment
+The Deployment resource focuses on managing the lifecycle of an application. Each time a new deployment is executed, a ReplicaSet is created.
 
-The ReplicaSet's purpose is to maintain the number of Pods of each deployment or after scaling the deployment (in the above session).
-Therefore, we can have multiple ReplicaSet presents for multiple deployed versions but all of them will be controlled by 1 Deployment resource.
+Role of ReplicaSet:
+- Ensures the specified number of Pods are running at all times.
+- Maintains stability when scaling the deployment.
+- Multiple ReplicaSets may exist for different deployed versions, but all are controlled by a single Deployment resource.
 
 > **! Important**:
+> While ReplicaSet guarantees that a certain number of pods are always running, Deployment is a higher-level abstraction that manages ReplicaSets and provides features like rolling updates and rollbacks.
 >
->    Although ReplicaSet ensures that a specified number of pod replicas are running at any given time, Deployment is a higher-level concept that manages ReplicaSets and provides declarative updates to Pods along with a lot of other useful features.
->
->    Therefore, we recommend using Deployments instead of directly using ReplicaSets, unless you require custom update orchestration or don't require updates at all.
+> It is recommended to use Deployments instead of directly managing ReplicaSets, unless you need custom update orchestration or do not require updates at all.
 
 ##### Working with ReplicaSet
 
@@ -978,7 +988,7 @@ Pod Template:
   Containers:
    demo-container:
     Image:        dummy-api:2
-    Port:         105/TCP
+    Port:         1500/TCP
     Host Port:    0/TCP
     Environment:  <none>
     Mounts:       <none>
@@ -988,20 +998,24 @@ Events:           <none>
 
 > **! Note**:
 >
->    Since ReplicaSet will be created automatically in Deployment, the ReplicaSet will have the randomized name with the prefix is the name of Deployment
+>    Since ReplicaSet will be created automatically when deployed the Deployment, the ReplicaSet will have the randomized name with the prefix is the name of Deployment
 
 #### Pod
 
-A Pod is the smallest unit of deployment in Kubernetes, it will focus on managing container(s).
-Generally, we can have multiple containers in a single Pod, but in the recommendation, a Pod should have one container.
+A Pod is the smallest deployable unit in Kubernetes, responsible for managing container(s).
 
-When a pod is created, by default it can be in any nodes of the cluster, but we can inject configuration in the Deployment template to deploy the Pod in the particular node.
-This provides flexibility for the Cluster since k8s can balance the number of pods between workers to utilize the resource, and it also has benefits for containers in Pod.
-If a node has issue(s) and cannot operate containers, kubernetes can move all containers to another node
+**Key Points About Pods**
+- A Pod can contain multiple containers, but best practice recommends one container per Pod for better isolation and scalability.
+- When created, a Pod can be scheduled on any node in the cluster by default.
+- We can specify configurations in the Deployment template to assign Pods to specific nodes.
+
+**Why is this important?**
+- Kubernetes balances Pods across worker nodes to optimize resource usage.
+- If a node fails, Kubernetes automatically reschedules Pods to healthy nodes, ensuring high availability.
 
 ##### Working with Pods
 
-We can treat a pod as a Docker container and it can do most of the work we can do with the docker container
+A Pod in Kubernetes can be treated like a Docker container, as it provides a similar isolated runtime environment. Most actions you perform on a Docker container can also be done with a Pod.
 
 - **Get/List all Pods**:
 ```bash
@@ -1010,11 +1024,7 @@ $ kubectl get pods
 # Sample response
 NAME                         READY   STATUS    RESTARTS   AGE
 dummy-api-55b48f6c47-dr24c   1/1     Running   0          51m
-dummy-api-55b48f6c47-nfx8n   1/1     Running   0          51m
 ```
-
-From the last example in Deployment, we have scaled the deployment to 2. Therefore we have 2 pods here, and because it's created automatically with Deployment template
-the name of Pod will be randomized with prefix is the Deployment name
 
 - **Inspect Pod Information**:
 ```bash
@@ -1026,7 +1036,7 @@ Name:         dummy-api-55b48f6c47-nfx8n
 Namespace:    default
 Priority:     0
 Node:         docker-desktop/192.168.65.4
-Start Time:   Mon, 10 Jan 2022 20:13:31 +0700
+Start Time:   Fri, 07 Mar 2025 16:50:25 +0700
 Labels:       app=demo
               pod-template-hash=55b48f6c47
 Annotations:  <none>
@@ -1040,10 +1050,10 @@ Containers:
     Container ID:   docker://234b5139b416b707f4b8c94d9d01a7185ef836f963c40c171cfe1e36ba993a66
     Image:          dummy-api:1
     Image ID:       docker://sha256:b749b81b8b69783ee483865099cce56996e1ae009dbf0c6d8051f73c9e1e43b4
-    Port:           105/TCP
+    Port:           1500/TCP
     Host Port:      0/TCP
     State:          Running
-      Started:      Mon, 10 Jan 2022 20:13:32 +0700
+      Started:      Fri, 07 Mar 2025 16:50:26 +0700
     Ready:          True
     Restart Count:  0
     Environment:    <none>
@@ -1084,34 +1094,19 @@ $ kubectl logs dummy-api-55b48f6c47-nfx8n
  * Debug mode: on
  * Running on all addresses.
    WARNING: This is a development server. Do not use it in a production deployment.
- * Running on http://10.1.3.181:105/ (Press CTRL+C to quit)
+ * Running on http://10.1.3.181:1500/ (Press CTRL+C to quit)
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 130-396-372
-127.0.0.1 - - [10/Jan/2022 13:55:08] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [10/Jan/2022 13:55:08] "GET /favicon.ico HTTP/1.1" 404 -
-127.0.0.1 - - [10/Jan/2022 13:55:29] "GET /ping HTTP/1.1" 200 -
+127.0.0.1 - - [07/Mar/2025 16:50:29] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Mar/2025 16:50:29] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [07/Mar/2025 16:50:35] "GET /ping HTTP/1.1" 200 -
 ```
 
 If we want to stream the logs realtime, you can add the flag `-f` in the command
 
-##### Scenarios 1: Testing loadbalancing request to Pod
 
-And when the end user request to our application, Kubernetes will loadbalancing the up comming request between pods to make sure there is no one way request to any particular pod.
-
-- **Example**:
-
-To prove the felexibily of the pod, we can scale up the above sample to 2 with command:
-```bash
-$ kubectl scale deployment/dummy-api --replicas=2
-```
-
-Then we will open the browser and access to our application via url http://localhost:30000, you can try reload the page a few time
-and pay attention to the `Host name`.
-
-You may see it's changed based on the pod name.
-
-##### Scenarios 2: Transfer files between local and Container in Pod
+##### Scenarios 1: Transfer files between local and Container in Pod
 
 - To copy file to container in pod
 ```bash
@@ -1129,7 +1124,7 @@ $ kubectl cp [POD NAME]:[FILE TO COPY] [DESTINATION]
 $ kubectl cp dummy-api-55b48f6c47-nfx8n:/tmp/test.txt .
 ```
 
-##### Scenarios 3: Execute command to container in Pod
+##### Scenarios 2: Execute command to container in Pod
 
 - To execute a simple command to container in pod
 ```bash
@@ -1148,13 +1143,13 @@ $ kubectl exec -it [POD NAME] -- sh -il
 $ kubectl exec -it dummy-api-55b48f6c47-dr24c -- sh -il
 ```
 
-##### Scenarios 4: Delete (recreate) a Pod
+##### Scenarios 3: Delete (recreate) a Pod
 
 We can delete the pod, but because we have the `ReplicaSet` to control the number of Pods for each Deployment.
 So when we delete the pod, it will delete the target pod but also create a new pod to maintain the number of pods defined in ReplicaSet
 
 ```bash
-# kubectl delete pods/[POD NAME]
+$ kubectl delete pods/[POD NAME]
 
 # Sample response
 $ kubectl delete pods/dummy-api-55b48f6c47-dr24c
@@ -1171,23 +1166,55 @@ dummy-api-55b48f6c47-nfx8n   1/1     Running   0          80m
 dummy-api-55b48f6c47-z6htv   1/1     Running   0          2s
 ```
 
+##### Scenarios 4: Testing loadbalancing request to Pod
+
+When an end-user sends a request to our application, Kubernetes automatically load balances the incoming traffic between available Pods.
+
+- **Example**:
+
+To prove the felexibily of the pod, we can scale up the above sample to 2 with command:
+```bash
+$ kubectl scale deployment/dummy-api --replicas=2
+```
+
+Next, expose the pod to your local machine, just run the script.
+```bash
+$ kubectl apply -f service/service-nodeport.yaml
+# For more details on the script, we will explain it in the next session
+```
+
+Then we will open the browser and access to our application via url http://localhost:3000, you can try reload the page a few time and pay attention to the `Host name`.
+
+You may see it's changed based on the pod name.
+
 ### Expose application (Service)
 
-As mentioned in the Deployment session, the running Pod cannot access out side the cluster.
-The only way we can access it is under `kube-proxy` with `port-forward` but this way is only for development. 
+By default, Pods cannot be accessed outside the cluster. While we can use `kubectl port-forward` for development, it's not suitable for production.
 
-If we want to make it for production and serving the public connection, we will need to expose it through `Service` resource of Kubernetes.
+To expose an application to external traffic in a Kubernetes cluster, we use a Service resource Kubernetes provides three main types of Services to expose applications:
+- ClusterIP (Default):
+    - Exposes the application internally within the cluster.
+    - Useful for communication between microservices.
+    - Cannot be accessed externally.
+- NodePort
+    - Exposes the application on a static port on each node.
+    - External users can access it using `<NodeIP>`:`<NodePort>`.
+    - Not recommended for production due to limited scalability.
+- LoadBalancer
+    - Automatically provisions an external load balancer (in cloud environments).
+    - Best for public-facing applications.
+    - Requires a cloud provider like AWS, GCP, or Azure.
 
-Right now, we have 3 types of Service in Kubernetes cluster
+#### ClusterIp - Internal-Only Access
 
-#### ClusterIp
-
-ClusterIP is the default type of service, which is used to expose a service for internal access only.
-This means the other applications can access (request) to this application's service but we can't access to this application externally
+ClusterIP is the default Kubernetes Service type. It exposes a service only within the cluster, making it accessible to other applications but not externally.
+Use Case:
+  - Ideal for microservices that communicate internally.
+  - Not accessible from outside the cluster.
 
 ![service-clusterip](./readme/service-clusterip.png)
 
-> Note: If you have delete the deployment, please check the [#deployment](#deployment) to deploy the dummy-api application again
+> Note: If you have delete the deployment, refer to the [#deployment](#deployment) to redeploy the dummy-api application
 
 To deploy the ClusterIP service we will use the template [service-clusterip.yaml](./kubernetes/services/service-clusterip.yaml)
 ```yaml
@@ -1202,8 +1229,8 @@ spec:                         # Service expose information
     app: demo
   ports:
     - protocol: TCP
-      port: 105
-      targetPort: 105
+      port: 1500               # Application port inside container
+      targetPort: 1500         # Expose to the cluster internal network with port
 ```
 
 Then we will deploy this service to kubernetes cluster
@@ -1220,18 +1247,21 @@ $ kubectl get service
 
 # Sample response
 NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
-dummy        ClusterIP   10.97.23.218   <none>        105/TCP   9s
+dummy        ClusterIP   10.97.23.218   <none>        1500/TCP   9s
 ```
 
-#### Nodeport
+#### Nodeport - Exposing Services on Cluster Nodes
 
-NodePorts are open ports on every cluster node. Kubernetes will route traffic that comes into a NodePort to the service, even if the service is not running on that node.
+A NodePort service exposes an application on a specific port across all nodes in a Kubernetes cluster. Kubernetes routes external traffic hitting this port to the service, even if the pod is not running on that particular node.
 
-Therefore, each port can only dedicated to a service only, and the node port range of entire Kubernetes cluster is between `30000-32767`
+Key Points:
+- Opens a static port (30000-32767) on every node.
+- Routes external requests to the correct service.
+- Each NodePort is dedicated to a single service.
 
 ![service-nodeport](./readme/service-nodeport.png)
 
-> Note: If you have delete the deployment, please check the [#deployment](#deployment) to deploy the dummy-api application again
+> Note: If you have delete the deployment, refer to the [#deployment](#deployment) to redeploy the dummy-api application
 
 To deploy the NodePort service we will use the template [service-nodeport.yaml](./kubernetes/services/service-nodeport.yaml)
 ```yaml
@@ -1247,12 +1277,12 @@ spec:                         # Service expose information
     app: demo
   ports:
     - protocol: TCP
-      port: 105
-      targetPort: 105
-      nodePort: 30000         # Specify the node port
+      port: 1500               # Application port inside container
+      targetPort: 1500         # Expose to the cluster internal network with port
+      nodePort: 30000         # Specify the node port to connect outside the cluster
 ```
 
-We can choose the port for this service type with `nodePort` in the above template, but it will be randomized in every deployment if we don't set
+We can specify a fixed port for a NodePort service using the nodePort field in the YAML template. However, if we don't define it, Kubernetes will automatically assign a random port within the `30000-32767` range for each deployment.
 
 Then we will deploy this service to kubernetes cluster
 ```bash
@@ -1268,7 +1298,7 @@ $ kubectl get service
 
 # Sample response
 NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
-dummy        NodePort    10.101.187.44   <none>        105:30000/TCP   11s
+dummy        NodePort    10.101.187.44   <none>        1500:30000/TCP   11s
 ```
 
 - **Test connect to Dummy-api through NodePort service (Optional)**
@@ -1285,13 +1315,16 @@ or we can access to url `http://localhost:30000` to view the UI
 
 #### Loadbalancer (Cloud)
 
-This service type only works when we host the Kubernetes on Cloud providers which support external load balancers.
+The LoadBalancer service type is specifically designed for cloud environments that support external load balancers.
 
-With the loadbalancer service type, the Kubernetes will request your Cloud provider and generate a new loadbalancer Url with we can set it to our DNS for public access.
+When using this service type, Kubernetes automatically provisions an external load balancer through the cloud provider, assigning it a publicly accessible URL or IP address. This makes it easy to expose services to the internet without additional configuration.
+
+✅ Best for: Production environments on cloud platforms like AWS, GCP, and Azure.
+⚠️ Note: Requires a cloud provider that supports external load balancers.
 
 ![service-loadbalancer](./readme/service-loadbalancer.png)
 
-> Note: If you have delete the deployment, please check the [#deployment](#deployment) to deploy the dummy-api application again
+> Note: If you have delete the deployment, refer to the [#deployment](#deployment) to redeploy the dummy-api application
 
 To Deploy the Loadbalancer service, we will use the template [service-loadbalancer.yaml](./kubernetes/services/service-loadbalance.yaml)
 ```yaml
@@ -1307,8 +1340,8 @@ spec:
     app: demo
   ports:
     - protocol: TCP
-      port: 105
-      targetPort: 105
+      port: 1500
+      targetPort: 1500
 ```
 
 Just need to deploy this service to Kubernetes cluster
@@ -1325,7 +1358,7 @@ $ kubectl get service
 
 # Sample response
 NAME            TYPE           CLUSTER-IP       EXTERNAL-IP                                                             PORT(S)                             AGE
-dummy           LoadBalancer   10.20.240.237    a57b64b7xxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx.us-west-2.elb.amazonaws.com   105:31469/TCP                       35s
+dummy           LoadBalancer   10.20.240.237    a57b64b7xxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx.us-west-2.elb.amazonaws.com   1500:31469/TCP                       35s
 ```
 
 Then we just need to set the loadbalancer url `a57b64b7xxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx.us-west-2.elb.amazonaws.com` to DNS for user to access
@@ -1347,7 +1380,7 @@ At this point, we already create another pod to the CLuster and we will try to c
 
   1. We just simple call the service name of the Dummy-Api application to connect to it, in this case is `dummy`:
   ```bash
-  $ curl http://dummy:105/ping
+  $ curl http://dummy:1500/ping
 
   # Sample response
   pong!%
@@ -1359,7 +1392,7 @@ We also can try remove the service of Dummy api and run the command above again 
 
 ### Set environment for Aplication on Kubernetes
 
-There is two ways we can set the environment variable to the container in development
+There is two ways we can set the environment variable to the container in K8s
 
 #### Option 1: Set environment directly to deployment
 
@@ -1394,7 +1427,7 @@ spec:
           image: dummy-api:1
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 105
+            - containerPort: 1500
           env:                               # Update the environment for this deployment
             - name: GREETING_QUOTE
               value: "Deployment with direct environment variable"
@@ -1415,7 +1448,7 @@ $ kubectl describe deployment/dummy-api
 # Sample response
 Name:                   dummy-api
 Namespace:              default
-CreationTimestamp:      Mon, 10 Jan 2022 16:31:48 +0700
+CreationTimestamp:      Fri, 07 Mar 2025 18:10:06 +0700
 Labels:                 app=demo
 Annotations:            deployment.kubernetes.io/revision: 5
 Selector:               app=demo
@@ -1428,7 +1461,7 @@ Pod Template:
   Containers:
    demo-container:
     Image:      dummy-api:1
-    Port:       105/TCP
+    Port:       1500/TCP
     Host Port:  0/TCP
     Environment:
       GREETING_QUOTE:  Deployment with direct environment variable
@@ -1445,8 +1478,7 @@ Events:
   Type    Reason             Age   From                   Message
   ----    ------             ----  ----                   -------
   Normal  ScalingReplicaSet  32s   deployment-controller  Scaled down replica set dummy-api-55b48f6c47 to 1
-  Normal  ScalingReplicaSet  32s   deployment-controller  Scaled up replica set dummy-api-6c674cd646 to 1
-  Normal  ScalingReplicaSet  31s   deployment-controller  Scaled down replica set dummy-api-55b48f6c47 to 0
+  ...
 ```
 
 As we can see the `Containers` has updated with the `Environment`.
@@ -1555,7 +1587,7 @@ spec:
         image: dummy-api:1
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 105
+        - containerPort: 1500
         envFrom:                           # Here is the place to use this
         - configMapRef:
             name: dummy-config             # Must match the Configmap name
@@ -1582,9 +1614,7 @@ $ kubectl delete configmap/dummy-api
 
 ### Cronjob and jobs
 
-Most of the time, you are using Kubernetes as a platform to run "long" processes where their purpose is to serve responses for a given incoming request.
-But Kubernetes also lets you run processes whose purpose is to execute some logic (i.e. update database, batch processing, etc.)
-
+Kubernetes supports both long-running and short-lived workloads. While most applications handle continuous traffic, some tasks are executed once or on a recurring schedule. Kubernetes provides Jobs and CronJobs to manage these workloads efficiently.
 - Jobs are tasks that execute some logic once, each job will create a dedicated Pod to execute task(s) and everything will be destroyed after task(s) finished
 - CronJobs is the controller of Jobs that a single job is repeated following a Cron pattern.
 
@@ -1707,22 +1737,21 @@ $ kubectl delete cronjobs/cronjob-hello
 
 ### Control project's components in logical level (namespace)
 
-Namespace in Kubernetes is a machanism to isolating groups of resources logically.
-In another understand, we can group Kubernetes resource together to manage easier.
+A Namespace in Kubernetes is a logical way to group and isolate resources within a cluster. It helps manage and organize multiple environments or teams efficiently.
 
-All resource in the same namespace have exactly the same functionality, the only different is we must specify the namespace when we execute command to get the correct resource
+All resources within a namespace function identically, but we must specify the namespace in commands to interact with the correct resources.
 
 **what makes namespace awesome**:
 - We can speicfic environment as namespace and use this to manage Deployments on each environment. With this we can have another layer to manage our resource without create another cluster for single environment
 - We also can control user access on a speicfic namespace, with this we can avoid mistake/accidents deleting a resource (deployment/service/configmap) on important namespace, for example Production
 
 By default, we will have 4 namespaces after creating the cluster:
-- default
-- kube-node-lease
-- kube-public
-- Kube-system
+- default: For resources without a specified namespace.
+- kube-node-lease: Manages node heartbeats.
+- kube-public: Holds publicly accessible cluster info
+- Kube-system: Hosts core Kubernetes services (avoid using this)
 
-All the namespaces with prefix `kube-` will be use for hosting Kubernetes core service so you shouldn't use those namespace. To deploy service we can create another namespace or use the `default`
+All namespaces with the kube- prefix are reserved for Kubernetes core services and should not be used for deployments. For your applications, you can either use the default namespace or create a custom namespace.
 
 #### Working with namespace
 
@@ -1738,6 +1767,15 @@ kube-public       Active   2d
 kube-system       Active   2d
 ```
 
+- **Create new namespace**:
+```bash
+$ kubectl create namespace [NAMESPACE NAME]
+
+# Sample
+$ kubectl create namespace dev
+namespace/dev created
+```
+
 - **Get resource in namespace**:
 ```bash
 $ kubectl get [RESOURCE TYPE] -n [NAMESPACE NAME]
@@ -1747,15 +1785,6 @@ $ kubectl get deployment -n dev
 ```
 - `[RESOURCE TYPE]`: can be deployment/service/configmap/etc.
 - `[NAMESPACE NAME]`: Is the namespace we want to get resource, if we want to get resource in `default` namespace so we don't have to specify this
-
-- **Create new namespace**:
-```bash
-$ kubectl create namespace [NAMESPACE NAME]
-
-# Sample
-$ kubectl create namespace dev
-namespace/dev created
-```
 
 - **Delete a namespace**
 ```bash

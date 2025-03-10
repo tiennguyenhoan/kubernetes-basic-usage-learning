@@ -14,4 +14,4 @@ spec:
           service:
             name: dummy-api
             port:
-              number: 105
+              number: 1500

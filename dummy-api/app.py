@@ -18,4 +18,4 @@ def health_check():
 
 if __name__ == '__main__':
     os.environ['FLASK_ENV'] = 'development'  # HARD CODE since default is production
-    app.run(host='0.0.0.0', port=105, debug=True)
+    app.run(host='0.0.0.0', port=1500, debug=True)
