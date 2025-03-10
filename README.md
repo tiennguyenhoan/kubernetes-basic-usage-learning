@@ -63,6 +63,7 @@ Please let me know if any part of this guideline is incorrect, all contributions
     - [Control project's components in logical level (namespace)](#control-projects-components-in-logical-level-namespace)
       - [Working with namespace](#working-with-namespace)
       - [Scenarios 1: Deploy with different namespace](#scenarios-1-deploy-with-different-namespace)
+      - [Scenarios 2: Pods communicate between namespace inside K8s cluster](#scenarios-2-pods-communicate-between-namespace-inside-k8s-cluster)
 
 <!-- vim-markdown-toc -->
 
@@ -1832,5 +1833,48 @@ $ kubectl apply -f kubernetes/namespace/deployment.yaml
 
 Then we can get the deployment in the `dev` namespace
 
-<!-- #### Scenarios 2: Pods communicate between namespace inside K8s cluster -->
-<!--  curl http://<service-name>.<namespace>-->
+#### Scenarios 2: Pods communicate between namespace inside K8s cluster
+
+By default, pods within the same namespace can communicate using their service names. However, for cross-namespace communication, you must reference the service using its fully qualified domain name
+
+
+For the Pod in same namespace communication, we can reference to this session [Scenarios: Test communicate between Pod in Cluster](#scenarios-test-communicate-between-pod-in-cluster)
+
+```bash
+$ curl http://dummy:1500/ping
+```
+
+But to communicate a service across namespace we must use this format `<service-name>.<namespace>`
+
+1. First, deploy the deploy the application and service [deployment.yaml](./kubernetes/deployments/deployment.yaml) and [service-nodeport.yaml](./kubernetes/services/service-nodeport.yaml)
+1. Let create a namespace
+  ```bash
+  $ kubectl create namespace demo
+  ```
+1. Deploy a service to the namespace
+  ```bash
+  $ kubectl run --rm curl --image=radial/busyboxplus:curl -i --tty -n demo
+
+  # Sample response
+  If you don't see a command prompt, try pressing enter.
+  [ root@curl:/ ]$
+  ```
+1. Test to call the dummy-api service in default namespace
+  ```bash
+  $ curl http://dummy.default:1500/ping
+
+  # Sample response
+  pong!
+  ```
+
+If you try to request without the namespace of the service, by default system will find the service in same namespace first.
+```bash
+$ curl http://dummy:1500/ping
+
+# Sample response
+curl: (6) Couldn't resolve host 'dummy'
+```
+
+> **Note:**
+> For the external access to the service, we don't have to worry about the namespace.
+> We just need to access to service via http://localhost:30000
