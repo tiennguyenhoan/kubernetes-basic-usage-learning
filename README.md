@@ -27,7 +27,7 @@ Please let me know if any part of this guideline is incorrect, all contributions
     - [Docker Requirement](#docker-requirement)
     - [Learning Resource](#learning-resource)
   - [Kubernetes](#kubernetes)
-    - [What is Kubernetes:](#what-is-kubernetes)
+    - [What is Kubernetes?](#what-is-kubernetes)
     - [Kubernetes concepts and components](#kubernetes-concepts-and-components)
   - [Physical level](#physical-level)
     - [How to connect to Kubernetes cluster](#how-to-connect-to-kubernetes-cluster)
@@ -325,7 +325,7 @@ That's how Kubernetes comes to the rescue! Kubernetes provides you with a framew
 
 It takes care of scaling and failover for your application, provides deployment patterns, and more. For example, Kubernetes can easily manage a canary deployment for your system.
 
-### What is Kubernetes:
+### What is Kubernetes?
 
 > "Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available."
 
