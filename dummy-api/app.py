@@ -16,6 +16,11 @@ def main():
 def health_check():
     return "pong!"
 
+@app.route('/crash', methods=['GET'])
+def crash():
+    os._exit(1)
+    return "Simulate app crash" # This line won't actually execute
+
 if __name__ == '__main__':
     os.environ['FLASK_ENV'] = 'development'  # HARD CODE since default is production
     app.run(host='0.0.0.0', port=1500, debug=True)
